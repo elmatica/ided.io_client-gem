@@ -20,7 +20,7 @@ RSpec.describe IdedClient::Auth do
   describe "#exchange_code_for_credential" do
     let(:code) { "i like cheese" }
     let(:token) { "dummy-token" }
-    let(:refresh_token) { "dummy-refresh-token"}
+    let(:refresh_token) { "dummy-refresh-token" }
     let(:response) {
       {
         "token_type" => "Bearer",
@@ -86,7 +86,7 @@ RSpec.describe IdedClient::Auth do
             "client_id" => "pizza",
             "client_secret" => "chips",
             "refresh_token" => "i like fresh cheese",
-            "grant_type" => "refresh_token"
+            "grant_type" => "refresh_token",
           },
           headers: {
             "Content-Type" => "application/x-www-form-urlencoded",
@@ -102,6 +102,29 @@ RSpec.describe IdedClient::Auth do
       credential = subject.exchange_refresh_token("i like fresh cheese")
       expect(credential.access_token).to eql("dummy-token")
       expect(credential.refresh_token).to eql("dummy-refresh-token")
+    end
+  end
+
+  describe "#authorized?" do
+    before do
+      allow(Base64).to receive(:strict_encode64).with("pizza:chips").and_return("encoded credentials")
+      stub_request(:post, "https://ided.localhost/oauth/introspect")
+        .with(
+          body: {
+            "token" => "i like fresh cheese",
+          },
+          headers: {
+            "Authorization" => "Basic encoded credentials",
+          },
+        ).to_return(
+          status: 200,
+          body: { active: true }.to_json,
+          headers: { 'Content-Type': "application/json" },
+        )
+    end
+
+    it "checks the token if it is authorized" do
+      expect(subject.authorized?("i like fresh cheese")).to be true
     end
   end
 end
