@@ -24,13 +24,31 @@ module IdedClient
     end
 
     def exchange_refresh_token(refresh_token)
-      new_token = oauth_client.get_token(grant_type: 'refresh_token', refresh_token: refresh_token)
+      new_token = oauth_client.get_token(grant_type: "refresh_token", refresh_token: refresh_token)
       build_credential(access_token: new_token.token, refresh_token: new_token.refresh_token)
+    end
+
+    def authorized?(token)
+      response = oauth_client.request(
+        :post,
+        "oauth/introspect",
+        body: { token: token },
+        headers: auth_headers,
+      ).response.body
+
+      parsed_response = JSON.parse(response)
+
+      parsed_response["active"] == true
     end
 
     private
 
     attr_reader :ided_host, :client_id, :client_secret, :redirect_uri, :credential_key
+
+    def auth_headers
+      encoded_credentials = Base64.strict_encode64("#{client_id}:#{client_secret}")
+      { "Authorization" => "Basic #{encoded_credentials}" }
+    end
 
     def exchange_code(code)
       oauth_client.auth_code.get_token(
