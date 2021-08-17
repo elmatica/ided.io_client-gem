@@ -36,9 +36,7 @@ module IdedClient
         headers: auth_headers,
       ).response.body
 
-      parsed_response = JSON.parse(response)
-
-      parsed_response["active"] == true
+      JSON.parse(response)["active"]
     end
 
     private
