@@ -1,11 +1,11 @@
 module IdedClient
   module TestHelpers
     class << self
-      def user_test_token(id = SecureRandom.uuid, exp = 7200)
+      def user_test_token(id: SecureRandom.uuid, user_email: "test@example.com", user_name: "Bob McTester", exp: 7200)
         payload = {
           sub: id,
-          user_email: "test@example.com",
-          user_name: "Bob McTester",
+          user_email: user_email,
+          user_name: user_name,
           exp: Time.now.utc.to_i + exp,
         }
         JWT.encode(payload, private_key, "RS512")
