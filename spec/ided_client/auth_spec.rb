@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe IdedClient::Auth do
-  subject { described_class.new(args) }
+  subject { described_class.new(**args) }
 
   let(:args) {
     {
