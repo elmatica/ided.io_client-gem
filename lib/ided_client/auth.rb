@@ -56,7 +56,7 @@ module IdedClient
     end
 
     def oauth_client
-      @oauth_client ||= OAuth2::Client.new(client_id, client_secret, site: ided_host)
+      @oauth_client ||= OAuth2::Client.new(client_id, client_secret, auth_scheme: :request_body, site: ided_host)
     end
   end
 end
