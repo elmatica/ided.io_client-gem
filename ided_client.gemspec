@@ -5,9 +5,9 @@ require "ided_client/version"
 
 Gem::Specification.new do |spec|
   spec.name = "ided_client"
-  spec.version = IdedClient::VERSION
-  spec.authors = ["Max Brosnahan"]
-  spec.email = ["maximilianbrosnahan@gmail.com"]
+  spec.version = "1.0.0"
+  spec.authors = ["Elmatica AS"]
+  spec.email = ["it@elmatica.com"]
 
   spec.summary = %q{Client gem for ided.io}
   spec.homepage = "https://github.com/Elmatica/ided_client-gem"
